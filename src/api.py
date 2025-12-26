@@ -59,8 +59,11 @@ class Avrae:
         r = self._request("post", path, request_data)
         try:
             return r.json()
-        except ValueError as exc:
-            raise ValueError(f"Non-JSON response from {path}: {r.text}") from exc
+        except ValueError:
+            # GVAR update endpoint returns plain text "Gvar updated." on success
+            if r.ok and "updated" in r.text.lower():
+                return {"success": True, "message": r.text}
+            raise ValueError(f"Non-JSON response from {path}: {r.text}")
 
     def put_request(self, path: str, request_data: Dict[str, Any]) -> Dict[str, Any]:
         r = self._request("put", path, request_data)
