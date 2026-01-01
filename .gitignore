@@ -318,6 +318,14 @@ dmypy.json
 # PyCharm Extra Files
 .idea/
 
+### macOS ###
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
 # testing
 testing/
 collections.json

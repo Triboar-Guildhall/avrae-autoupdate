@@ -182,11 +182,22 @@ class Avrae:
                 for k, v in parser.collections.items()
                 if v == collection_id
             ][0]
+            # Search for snippet file recursively in collection directory
+            snippet_filename = snippet["name"] + ".snippet"
+            snippet_matches = list(Path(collection_path).rglob(snippet_filename))
+            if snippet_matches:
+                snippet_file_path = snippet_matches[0]
+                # Derive docs path from snippet path
+                docs_file_path = snippet_file_path.with_suffix(".md")
+            else:
+                # Fall back to root directory if not found
+                snippet_file_path = Path(collection_path + "/" + snippet_filename)
+                docs_file_path = Path(collection_path + "/" + snippet["name"] + ".md")
             parsed_snippet = ParsedSnippet(
                 snippet["name"],
                 snippet,
-                Path(collection_path + "/" + snippet["name"] + ".snippet"),
-                Path(collection_path + "/" + snippet["name"] + ".md"),
+                snippet_file_path,
+                docs_file_path,
             )
             self.snippet_outputs[collection_id][
                 parsed_snippet.file_path
